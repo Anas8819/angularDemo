@@ -3,16 +3,16 @@ import { Directive, Input } from '@angular/core';
 
 @Directive({
     selector: '[appSelectValidator]',
-    providers:[{
-        provide:NG_VALIDATORS,
+    providers: [{
+        provide: NG_VALIDATORS,
         useExisting: SelectRequiredValidatorDirective,
-        multi:true
+        multi: true
     }]
 })
 
 export class SelectRequiredValidatorDirective implements Validator {
     @Input('appSelectValidator')
-    defaultValue:string;
+    defaultValue: string;
     validate(control: AbstractControl): { [key: string]: any } | null {
         return control.value === this.defaultValue ? { 'defaultSelected': true } : null;
     }
