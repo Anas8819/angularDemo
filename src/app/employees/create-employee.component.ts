@@ -15,6 +15,7 @@ export class CreateEmployeeComponent implements OnInit {
 
   @ViewChild('employeeForm') public createEmployeeForm: NgForm;
   previewPhoto = false;
+  panelTitle: string;
   public datePickerConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
   employee: Employee;
   departments: Department[] = [
@@ -49,8 +50,11 @@ export class CreateEmployeeComponent implements OnInit {
         isActive: null,
         photoPath: null
       };
+      this.panelTitle = 'Create Employee';
+      this.createEmployeeForm.reset();
     } else {
-      this.employee = this._employeeService.getEmployee(id);
+      this.panelTitle = 'Edit Employee';
+      this.employee = Object.assign({}, this._employeeService.getEmployee(id));
     }
   }
 

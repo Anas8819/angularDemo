@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Employee } from '../Models/employee.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EmployeeService } from './employee.service';
 
 @Component({
   selector: 'app-display-employee',
@@ -13,8 +14,11 @@ export class DisplayEmployeeComponent implements OnInit {
   displayEmployee: Employee;
   @Input()
   searchTerm: string;
+  @Output()
+  notifyDelete: EventEmitter<number> = new EventEmitter<number>();
+  confirmDelete = false;
   private selectedEmployeeId: number;
-  constructor(private _route: ActivatedRoute, private _router: Router) { }
+  constructor(private _employeeService: EmployeeService, private _route: ActivatedRoute, private _router: Router) { }
 
   ngOnInit() {
     this.selectedEmployeeId = +this._route.snapshot.paramMap.get('id');
@@ -28,5 +32,10 @@ export class DisplayEmployeeComponent implements OnInit {
 
   editEmployee() {
     this._router.navigate(['/edit', this.displayEmployee.id]);
+  }
+
+  deleteEmployee() {
+    this._employeeService.deleteEmployee(this.displayEmployee.id);
+    this.notifyDelete.emit(this.displayEmployee.id);
   }
 }
