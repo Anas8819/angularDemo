@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Employee } from '../Models/employee.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { delay } from 'rxjs/internal/operators';
 import { ListEmployeesComponent } from './list-employees.component';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 
 export class EmployeeService {
 
+    constructor(private httpClient: HttpClient) { }
     private listEmployees: Employee[] = [
         {
             id: 1,
@@ -46,9 +49,17 @@ export class EmployeeService {
     ];
 
     getEmployees(): Observable<Employee[]> {
-        return of(this.listEmployees).pipe(delay(2000));
+        return this.httpClient.get<Employee[]>('http://localhost:3000/employees').pipe(catchError(this.handleError));
     }
 
+    private handleError(errorResponce: HttpErrorResponse) {
+        if (errorResponce.error instanceof ErrorEvent) {
+            console.error('Client Side Error: ', errorResponce.error.message);
+        } else {
+            console.error('Server Side Error: ', errorResponce);
+        }
+        return throwError('There is a problem with the service. We are notified and working on it. Please try again later.');
+    }
     getEmployee(id: number): Employee {
         return this.listEmployees.find(t => t.id === id);
     }
@@ -65,6 +76,7 @@ export class EmployeeService {
             this.listEmployees[foundIndex] = employee;
         }
     }
+
     deleteEmployee(id: number) {
         const i = this.listEmployees.findIndex(t => t.id === id);
         if (i !== -1) {
