@@ -6,3 +6,7 @@
   <app-display-employee [displayEmployee]="employee" [searchTerm]="searchTerm" (notifyDelete)="onDeleteNotification($event)">
   </app-display-employee>
 </div>
+
+<div *ngIf="error">
+  {{error}}
+</div>
