@@ -20,11 +20,11 @@ export class ListEmployeesComponent implements OnInit {
     this.filteredEmployees = this.filterEmployees(value);
   }
   constructor(private _router: Router, private _route: ActivatedRoute) {
-    const resolvedEmployeeList: ResolvedEmployeeList = this.employees = this._route.snapshot.data['employeeList'];
-    if (resolvedEmployeeList.error == null) {
-      this.employees = resolvedEmployeeList.employeeList;
+    const resolvedData: Employee[] | string = this.employees = this._route.snapshot.data['employeeList'];
+    if (Array.isArray(resolvedData)) {
+      this.employees = resolvedData;
     } else {
-      this.error = resolvedEmployeeList.error;
+      this.error = resolvedData;
     }
     if (this._route.snapshot.queryParamMap.has('searchTerm')) {
       this.searchTerm = this._route.snapshot.queryParamMap.get('searchTerm');

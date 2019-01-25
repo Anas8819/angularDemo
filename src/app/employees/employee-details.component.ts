@@ -17,8 +17,9 @@ export class EmployeeDetailsComponent implements OnInit {
   ngOnInit() {
     this._route.paramMap.subscribe(params => {
       this._id = +params.get('id');
-      this.displayEmployee = this._employeeServive.getEmployee(this._id);
-    });
+      this._employeeServive.getEmployee(this._id).subscribe(employee => this.displayEmployee = employee,
+        (err: any) => console.log(err)
+      );    });
   }
   viewNextEmployee() {
     if (this._id < 3) {
